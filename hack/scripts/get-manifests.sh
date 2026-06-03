@@ -42,5 +42,5 @@ patch_batchgateway_image() {
 }
 
 # Update batchgateway manifests, change the commit SHA below and run: make get-manifests
-fetch_component "batchgateway" "llm-d-batch-gateway-operator" "554d9416f5112da85f99a407c7d33d257175e550" "config"
+fetch_component "batchgateway" "llm-d-batch-gateway-operator" "75286a071268b91db9904f8eeba19b6daa6250d4" "config"
 patch_batchgateway_image "${PROJECT_ROOT}/config/manifests/batchgateway"

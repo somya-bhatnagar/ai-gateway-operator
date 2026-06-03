@@ -13,6 +13,14 @@ Release fullname, truncated to 63 chars.
 {{- end }}
 
 {{/*
+Namespace for namespaced resources. Prefers operatorNamespace value
+(injected by the platform operator) over .Release.Namespace.
+*/}}
+{{- define "chart.namespace" -}}
+{{- default .Release.Namespace .Values.operatorNamespace -}}
+{{- end }}
+
+{{/*
 Standard labels.
 */}}
 {{- define "chart.labels" -}}

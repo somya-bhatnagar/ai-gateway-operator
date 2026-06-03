@@ -81,6 +81,18 @@
         "serviceAccount": {
           "$ref": "#/$defs/ServiceAccountSpec"
         },
+        "nameOverride": {
+          "type": "string",
+          "default": ""
+        },
+        "fullnameOverride": {
+          "type": "string",
+          "default": ""
+        },
+        "operatorNamespace": {
+          "type": "string",
+          "default": ""
+        },
         "imagePullSecret": {
           "type": "string"
         },
