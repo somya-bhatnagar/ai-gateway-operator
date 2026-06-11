@@ -11,3 +11,6 @@ resources:
 labels:
   - pairs:
       app.kubernetes.io/part-of: ai-gateway-operator
+      # set platform.opendatahub.io/part-of=aigateway as a workaround for 3.5ea2 release
+      # so the CR will take all deployment readiness to CR status=>DSC modulestatus will show correct
+      platform.opendatahub.io/part-of: aigateway
