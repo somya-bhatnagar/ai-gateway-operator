@@ -99,6 +99,7 @@ func NewReconciler(
 			deploy.WithApplyOrder(),
 		)).
 		WithAction(deployments.NewAction()).
+		WithAction(m.overWriteCondition).
 		WithAction(m.reportStatus).
 		WithAction(gc.NewAction(
 			gc.InNamespace(cfg.ApplicationsNamespace),

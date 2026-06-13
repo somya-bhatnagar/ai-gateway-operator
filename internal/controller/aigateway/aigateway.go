@@ -21,13 +21,19 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/opendatahub-io/opendatahub-operator/v2/api/common"
+	"github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/conditions"
 	odhtypes "github.com/opendatahub-io/opendatahub-operator/v2/pkg/controller/types"
 	odhdeploy "github.com/opendatahub-io/opendatahub-operator/v2/pkg/deploy"
 
 	componentApi "github.com/opendatahub-io/ai-gateway-operator/api/components/v1alpha1"
 	moduleconfig "github.com/opendatahub-io/ai-gateway-operator/pkg/config"
+	"github.com/opendatahub-io/ai-gateway-operator/pkg/controller/status"
 	"github.com/opendatahub-io/ai-gateway-operator/pkg/version"
 )
+
+// managedState is the ManagementState value that requests a sub-module be deployed.
+const managedState = "Managed"
 
 const (
 	componentName = componentApi.AIGatewayComponentName
@@ -78,7 +84,7 @@ func (m *Module) initialize(_ context.Context, rr *odhtypes.ReconciliationReques
 		return fmt.Errorf("instance is not an AIGateway")
 	}
 
-	if obj.Spec.BatchGateway.ManagementState == "Managed" {
+	if obj.Spec.BatchGateway.ManagementState == managedState {
 		rr.Manifests = append(rr.Manifests, m.batchGatewayManifestInfo)
 
 		if err := odhdeploy.ApplyParams(
@@ -92,6 +98,35 @@ func (m *Module) initialize(_ context.Context, rr *odhtypes.ReconciliationReques
 	}
 
 	// TODO: add for maas
+
+	return nil
+}
+
+// anySubModuleManaged reports whether at least one AIGateway sub-module is set to Managed.
+func anySubModuleManaged(obj *componentApi.AIGateway) bool {
+	return obj.Spec.BatchGateway.ManagementState == managedState
+	// TODO: add maas once it lands, e.g.:
+	//   || obj.Spec.MaaS.ManagementState == managedState
+}
+
+// force to set the DeploymentsAvailable condition to Info level from Error
+// this makes operator not flag AIGateway CR status to False, thus opendatahub-operator wont set ModuleStatus to False
+func (m *Module) overWriteCondition(_ context.Context, rr *odhtypes.ReconciliationRequest) error {
+	obj, ok := rr.Instance.(*componentApi.AIGateway)
+	if !ok {
+		return fmt.Errorf("instance is not an AIGateway")
+	}
+
+	if anySubModuleManaged(obj) {
+		return nil
+	}
+
+	rr.Conditions.MarkFalse(
+		status.ConditionDeploymentsAvailable,
+		conditions.WithSeverity(common.ConditionSeverityInfo),
+		conditions.WithReason(status.NoSubModuleManagedReason),
+		conditions.WithMessage("No sub-module is Managed; nothing to deploy"),
+	)
 
 	return nil
 }
