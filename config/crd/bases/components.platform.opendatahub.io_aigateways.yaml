@@ -64,6 +64,18 @@ spec:
                     - Removed
                     type: string
                 type: object
+              modelsAsService:
+                description: ModelsAsService controls the maas-controller sub-component.
+                properties:
+                  managementState:
+                    default: Removed
+                    description: ManagementState controls whether the maas-controller
+                      operator is deployed.
+                    enum:
+                    - Managed
+                    - Removed
+                    type: string
+                type: object
             type: object
           status:
             description: AIGatewayStatus defines the observed state of AIGateway.
