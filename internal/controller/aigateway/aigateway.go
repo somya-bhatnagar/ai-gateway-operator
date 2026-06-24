@@ -80,8 +80,8 @@ func NewModule(cfg *moduleconfig.Config) (*Module, error) {
 
 	maasMI := odhtypes.ManifestInfo{
 		Path:       cfg.ManifestsPath,
-		ContextDir: "maas",
-		SourcePath: "base",
+		ContextDir: "maascontroller",
+		SourcePath: "default",
 	}
 
 	if err := odhdeploy.ApplyParams(maasMI.String(), "params.env", maasImageParamMap, nil); err != nil {
