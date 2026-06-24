@@ -14,14 +14,14 @@ labels:
       app.kubernetes.io/part-of: models-as-a-service
 
 configMapGenerator:
-  - name: maas-controller-params
+  - name: maas-parameters
     envs:
       - params.env
 
 replacements:
   - source:
       kind: ConfigMap
-      name: maas-controller-params
+      name: maas-parameters
       fieldPath: data.MAAS_CONTROLLER_IMAGE
     targets:
       - select:
