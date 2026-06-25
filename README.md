@@ -8,6 +8,19 @@ A Kubernetes operator that manages AI Gateway components for [Open Data Hub](htt
 - A Kubernetes cluster (Kind, CRC, or OpenShift)
 - `kubectl` configured to access the cluster
 
+## User Documentation
+
+For information on using the AI Gateway operator and its sub-components:
+
+- **[Enabling Models as a Service (MaaS)](docs/enabling-models-as-a-service.md)** - Deploy and manage Models as a Service for multi-tenant model inference
+
+## Developer Documentation
+
+For architecture and integration details:
+
+- **[Architecture](docs/architecture.md)** - How ai-gateway-operator manages sub-components
+- **[OpenDataHub Integration](docs/integration-opendatahub-operator.md)** - Integration with opendatahub-operator
+
 ## Updating Component Manifests
 
 This operator vendors manifests from sub-components into `config/manifests/`. These files are checked into the repository because the container build expects them in the source tree (`COPY config/manifests/` in the Containerfile).
