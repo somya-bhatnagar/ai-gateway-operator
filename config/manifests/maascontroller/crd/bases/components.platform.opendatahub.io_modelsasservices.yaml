@@ -4,28 +4,24 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.4
-  name: externalmodels.maas.opendatahub.io
+  name: modelsasservices.components.platform.opendatahub.io
 spec:
-  group: maas.opendatahub.io
+  group: components.platform.opendatahub.io
   names:
-    kind: ExternalModel
-    listKind: ExternalModelList
-    plural: externalmodels
-    singular: externalmodel
-  scope: Namespaced
+    kind: ModelsAsService
+    listKind: ModelsAsServiceList
+    plural: modelsasservices
+    singular: modelsasservice
+  scope: Cluster
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.provider
-      name: Provider
+    - description: Ready
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
       type: string
-    - jsonPath: .spec.targetModel
-      name: TargetModel
-      type: string
-    - jsonPath: .spec.endpoint
-      name: Endpoint
-      type: string
-    - jsonPath: .status.phase
-      name: Phase
+    - description: Reason
+      jsonPath: .status.conditions[?(@.type=="Ready")].reason
+      name: Reason
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
@@ -33,10 +29,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: |-
-          ExternalModel is the Schema for the externalmodels API.
-          It defines an external LLM provider (e.g., OpenAI, Anthropic) that can be
-          referenced by MaaSModelRef resources.
+        description: ModelsAsService is the canonical platform-facing contract for
+          the MaaS module.
         properties:
           apiVersion:
             description: |-
@@ -56,56 +50,28 @@ spec:
           metadata:
             type: object
           spec:
-            description: ExternalModelSpec defines the desired state of ExternalModel
+            description: |-
+              ModelsAsServiceSpec defines the desired state of the MaaS module contract.
+              It intentionally stays minimal and does not mirror Tenant configuration.
             properties:
-              credentialRef:
+              managementState:
                 description: |-
-                  CredentialRef references a Kubernetes Secret containing the provider API key.
-                  The Secret must contain a data key "api-key" with the credential value.
-                properties:
-                  name:
-                    description: Name is the name of the Secret
-                    maxLength: 253
-                    minLength: 1
-                    type: string
-                required:
-                - name
-                type: object
-              endpoint:
-                description: |-
-                  Endpoint is the FQDN of the external provider (no scheme or path).
-                  e.g. "api.openai.com".
-                  This field is metadata for downstream consumers (e.g. IPP provider-resolver plugin)
-                  and is not used by the controller for endpoint derivation.
-                maxLength: 253
-                minLength: 1
-                pattern: ^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$
-                type: string
-              provider:
-                description: Provider identifies the API format and auth type for
-                  the external model.
-                maxLength: 63
-                minLength: 1
-                type: string
-              targetModel:
-                description: |-
-                  TargetModel is the upstream model name at the external provider.
-                  e.g. "gpt-4o", "claude-sonnet-4-5-20241022".
-                maxLength: 253
-                minLength: 1
+                  ManagementState controls whether the module operator should reconcile or remove
+                  the MaaS platform resources represented by this contract.
+                enum:
+                - Managed
+                - Removed
                 type: string
             required:
-            - credentialRef
-            - endpoint
-            - provider
-            - targetModel
+            - managementState
             type: object
           status:
-            description: ExternalModelStatus defines the observed state of ExternalModel
+            description: ModelsAsServiceStatus defines the observed state of the MaaS
+              module contract.
             properties:
               conditions:
-                description: Conditions represent the latest available observations
-                  of the external model's state
+                description: Conditions represent the latest available module-level
+                  observations.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -161,17 +127,55 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: ObservedGeneration is the last metadata.generation processed
+                  by maas-controller.
+                format: int64
+                minimum: 0
+                type: integer
               phase:
-                description: Phase represents the current phase of the external model
+                description: |-
+                  Phase is a high-level lifecycle summary expected by the module handler.
+                  Expected values are "Ready" and "Not Ready".
                 enum:
-                - Pending
                 - Ready
-                - Failed
+                - Not Ready
                 type: string
+              releases:
+                description: Releases lists the installed operator / component versions
+                  reported by MaaS.
+                items:
+                  description: ComponentRelease reports a single installed component
+                    or operator release.
+                  properties:
+                    name:
+                      description: Name identifies the component or operator.
+                      minLength: 1
+                      type: string
+                    repoUrl:
+                      description: RepoURL points at the source repository for the
+                        reported release, when known.
+                      type: string
+                    version:
+                      description: Version is the installed version, when known.
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
             type: object
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: ModelsAsService name must be default-modelsasservice
+          rule: self.metadata.name == 'default-modelsasservice'
     served: true
     storage: true
     subresources:

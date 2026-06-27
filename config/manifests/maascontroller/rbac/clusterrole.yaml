@@ -21,7 +21,6 @@ rules:
   resources:
   - endpoints
   - pods
-  - secrets
   verbs:
   - get
   - list
@@ -44,12 +43,6 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - ""
-  resources:
-  - serviceaccounts/token
-  verbs:
-  - create
 - apiGroups:
   - ""
   resources:
@@ -111,6 +104,24 @@ rules:
   - list
   - patch
   - watch
+- apiGroups:
+  - components.platform.opendatahub.io
+  resources:
+  - modelsasservices
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - components.platform.opendatahub.io
+  resources:
+  - modelsasservices/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - config.openshift.io
   resources:
@@ -337,11 +348,8 @@ rules:
   - clusterrolebindings
   - clusterroles
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
   - watch
 - apiGroups:
   - rbac.authorization.k8s.io
