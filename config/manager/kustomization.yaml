@@ -6,4 +6,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: quay.io/opendatahub/odh-ai-gateway-operator
-  newTag: odh-stable
+  newTag: integrated
