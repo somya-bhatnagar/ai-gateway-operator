@@ -38,14 +38,13 @@ RUN VERSION_PKG="github.com/opendatahub-io/ai-gateway-operator/pkg/version" && \
     CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-$(go env GOARCH)} \
     make build-bin BIN_DIR=/workspace/bin BIN_NAME=manager LDFLAGS="${LDFLAGS}"
 
-# Make manifests readable by any user (OpenShift assigns arbitrary UIDs)
-RUN chmod -R a+rX config/manifests/
-
 # Use UBI 10 micro as minimal runtime image
 FROM registry.access.redhat.com/ubi10/ubi-micro:10.0
 WORKDIR /
 COPY --from=builder /workspace/bin/manager .
 COPY --from=builder /workspace/config/manifests/ /opt/manifests/
+# Make manifests readable by any user (OpenShift assigns arbitrary UIDs)
+RUN chmod -R a+rX /opt/manifests/
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]
