@@ -39,6 +39,19 @@ AIGateway CR
 
 The `AIGateway` CR itself is created by opendatahub-operator — see [integration-opendatahub-operator.md](integration-opendatahub-operator.md).
 
+### MaaS deployment scope
+
+When `spec.modelsAsService.managementState` is `Managed`, ai-gateway-operator renders and deploys **`config/manifests/maascontroller/base/`** only:
+
+| Included | Not deployed by this operator |
+|----------|------------------------------|
+| MaaS CRDs | maas-api |
+| maas-controller Deployment | Billing |
+| Controller RBAC + webhook | Observability (Grafana/Perses) |
+| | Gateway policies (`config/manifests/maas/`) |
+
+The operator's RBAC escalation rules in `config/rbac/role.yaml` must cover permissions inside the vendored `maascontroller` ClusterRoles (see kubebuilder markers in `aigateway_controller.go`). Do not edit `config/manifests/maascontroller/rbac/` directly — it is refreshed by `make get-manifests`.
+
 ## 2. Build process
 
 ### 2.1 Each sub-component prepares its manifests
