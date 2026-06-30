@@ -195,3 +195,66 @@ DSC (default-dsc)
 ---
 
 **Status**: Ready for database infrastructure setup and full e2e validation ✅
+
+---
+
+## 🚀 **UPDATE: MaaS Controller Now Running!**
+
+**Status**: ✅ **MaaS Controller Online** | ⚠️ **Database Setup Pending**
+
+### What Fixed It
+1. **Created webhook certificate secret** (`maas-controller-webhook-cert`)
+2. **Created CA bundle configmap** (`odh-trusted-ca-bundle`)
+3. **Restarted pod** to pick up new secrets
+
+### Current Pod Status
+```
+✅ maas-controller: 1/1 Running
+✅ payload-pre-processing: 1/1 Running  
+✅ payload-processing: 1/1 Running
+❌ maas-api: 0/1 CrashLoopBackOff (Database connection needed)
+```
+
+### What's Working
+- MaaS controller successfully acquired leader lease
+- All reconciler event sources initialized
+- Controller watching: Tenant, Config, AuthPolicy, ModelRef, Subscription CRDs
+- Webhook server running on port 9443
+- Metrics server running on port 8080
+
+### Remaining Work
+**MaaS API Pod** needs:
+1. PostgreSQL database connection
+2. Database secret (`maas-db-config`) with valid connection URL
+3. Proper RBAC permissions (partially done)
+
+**To Complete E2E**:
+```bash
+# Option 1: Deploy PostgreSQL with Helm
+helm install postgres bitnami/postgresql \
+  --namespace maas-api \
+  --set auth.username=maas \
+  --set auth.password=maas-password \
+  --set auth.database=maas
+
+# Option 2: Use external database
+oc create secret generic maas-db-config \
+  --from-literal=DB_CONNECTION_URL="postgres://user:pass@external-host/maas" \
+  -n maas-api
+
+# Then restart API pod
+oc rollout restart deployment/maas-api -n maas-api
+```
+
+---
+
+**Architecture Status**:
+```
+AIGateway (default-aigateway)
+  ├── spec.modelsAsService: Managed ✅
+  └── Reconciled by:
+      ├── MaaS Controller ✅ (Running)
+      ├── MaaS API ⚠️ (Waiting for DB)
+      └── Payload Processing ✅ (Running)
+```
+
