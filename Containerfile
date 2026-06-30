@@ -42,9 +42,9 @@ RUN VERSION_PKG="github.com/opendatahub-io/ai-gateway-operator/pkg/version" && \
 FROM registry.access.redhat.com/ubi10/ubi-micro:10.0
 WORKDIR /
 COPY --from=builder /workspace/bin/manager .
-COPY --from=builder /workspace/config/manifests/ /opt/manifests/
+COPY --from=builder /workspace/config/manifests/ /manifests/
 # Make manifests readable by any user (OpenShift assigns arbitrary UIDs)
-RUN chmod -R a+rX /opt/manifests/
+RUN chmod -R a+rX /manifests/
 USER 65532:65532
 
 ENTRYPOINT ["/manager"]
