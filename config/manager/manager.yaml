@@ -52,10 +52,11 @@ spec:
       - name: copy-manifests
         image: controller:latest
         imagePullPolicy: Always
-        # Manifests are baked into the image at /opt/manifests. Mount the emptyDir
-        # at the same path so the manager container and initContainer share the
-        # same mounted volume for consistent access.
-        command: ["cp", "-r", "/opt/manifests/.", "/opt/manifests/"]
+        # Manifests are baked into the image at /opt/manifests. The emptyDir is
+        # mounted at /mnt/manifests so the image layer at /opt/manifests remains
+        # visible; files are copied into the emptyDir which the manager container
+        # mounts at /opt/manifests for runtime reads and writes.
+        command: ["cp", "-r", "/opt/manifests/.", "/mnt/manifests/"]
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
@@ -64,7 +65,7 @@ spec:
             - "ALL"
         volumeMounts:
         - name: manifests
-          mountPath: /opt/manifests
+          mountPath: /mnt/manifests
       containers:
       - command:
         - /manager
