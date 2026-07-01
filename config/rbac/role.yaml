@@ -50,6 +50,12 @@ rules:
   - watch
 - apiGroups:
   - ""
+  resources:
+  - serviceaccounts/token
+  verbs:
+  - create
+- apiGroups:
+  - ""
   - events.k8s.io
   resources:
   - events
@@ -95,6 +101,7 @@ rules:
   - maasauthpolicies.maas.opendatahub.io
   - maasmodelrefs.maas.opendatahub.io
   - maassubscriptions.maas.opendatahub.io
+  - modelsasservices.components.platform.opendatahub.io
   - tenants.maas.opendatahub.io
   resources:
   - customresourcedefinitions
@@ -492,8 +499,10 @@ rules:
   - clusterroles
   verbs:
   - create
+  - delete
   - get
   - list
+  - patch
   - watch
 - apiGroups:
   - rbac.authorization.k8s.io
