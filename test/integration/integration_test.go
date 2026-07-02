@@ -58,7 +58,7 @@ import (
 )
 
 const (
-	timeout  = 90 * time.Second
+	timeout  = 3 * time.Minute
 	interval = 2 * time.Second
 
 	moduleCRDName              = "aigateways.components.platform.opendatahub.io"
