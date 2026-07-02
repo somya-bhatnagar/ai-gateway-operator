@@ -73,9 +73,9 @@ import (
 // +kubebuilder:rbac:groups=apiextensions.k8s.io,resources=customresourcedefinitions,verbs=create;list;watch
 // +kubebuilder:rbac:groups=apiextensions.k8s.io,resources=customresourcedefinitions,resourceNames=tenants.maas.opendatahub.io;aitenants.maas.opendatahub.io;configs.maas.opendatahub.io;maasmodelrefs.maas.opendatahub.io;maasauthpolicies.maas.opendatahub.io;maassubscriptions.maas.opendatahub.io;externalmodels.maas.opendatahub.io;externalmodels.inference.opendatahub.io;externalproviders.inference.opendatahub.io;modelsasservices.components.platform.opendatahub.io,verbs=get;update;patch;delete
 // +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,verbs=create;list;watch
-// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,resourceNames=maas-controller-cluster-config-rolebinding;maas-controller-rolebinding,verbs=get;update;patch;delete
-// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles,verbs=create;list;watch
-// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles,resourceNames=maas-controller-cluster-config-role;maas-controller-role;maas-owner-role;maas-viewer-role,verbs=get;update;patch;delete
+// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,resourceNames=maas-controller-cluster-config-rolebinding;maas-controller-rolebinding;maas-api-rolebinding;maas-api-supplemental-rolebinding;payload-processing-reader-rolebinding,verbs=get;update;patch;delete
+// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles,verbs=bind;create;list;watch
+// +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles,resourceNames=maas-controller-cluster-config-role;maas-controller-role;maas-owner-role;maas-viewer-role;maas-api;maas-api-supplemental;payload-processing-reader,verbs=get;update;patch;delete
 // +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=validatingwebhookconfigurations,verbs=create;list;watch
 // +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=validatingwebhookconfigurations,resourceNames=maas-validating-webhook-configuration,verbs=get;update;patch;delete
 // +kubebuilder:rbac:groups="",resources=namespaces,verbs=get;list;watch;create
