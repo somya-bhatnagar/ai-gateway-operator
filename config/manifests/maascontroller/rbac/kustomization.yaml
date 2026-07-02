@@ -1,7 +1,13 @@
 resources:
   - clusterrole.yaml
   - clusterrole_maas_configs.yaml
+  - clusterrole_maas_api.yaml
+  - clusterrole_maas_api_supplemental.yaml
+  - clusterrole_payload_processing_reader.yaml
   - clusterrolebinding_maas_configs.yaml
+  - clusterrolebinding_maas_api.yaml
+  - clusterrolebinding_maas_api_supplemental.yaml
+  - clusterrolebinding_payload_processing_reader.yaml
   - clusterrole_binding.yaml
   - service_account.yaml
   - leader_election_role.yaml

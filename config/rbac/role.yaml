@@ -471,6 +471,17 @@ rules:
   - watch
 - apiGroups:
   - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
   resourceNames:
   - llm-d-batch-gateway-operator
   resources:
@@ -483,8 +494,11 @@ rules:
 - apiGroups:
   - rbac.authorization.k8s.io
   resourceNames:
+  - maas-api-rolebinding
+  - maas-api-supplemental-rolebinding
   - maas-controller-cluster-config-rolebinding
   - maas-controller-rolebinding
+  - payload-processing-reader-rolebinding
   resources:
   - clusterrolebindings
   verbs:
@@ -495,9 +509,9 @@ rules:
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
-  - clusterrolebindings
   - clusterroles
   verbs:
+  - bind
   - create
   - delete
   - get
@@ -520,10 +534,13 @@ rules:
 - apiGroups:
   - rbac.authorization.k8s.io
   resourceNames:
+  - maas-api
+  - maas-api-supplemental
   - maas-controller-cluster-config-role
   - maas-controller-role
   - maas-owner-role
   - maas-viewer-role
+  - payload-processing-reader
   resources:
   - clusterroles
   verbs:
