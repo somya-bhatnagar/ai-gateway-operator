@@ -71,7 +71,7 @@ set +u
 declare -A COMPONENTS=(
     [batchgateway]="llm-d-batch-gateway-operator|config|96266f4b7d9d8b4fbe56225a2b37e064717cd3e1|3ffb67bc46bc00e2183df4f568c92d621cdc1743"
     # MaaS: latest main branch commit
-    [maascontroller]="models-as-a-service|deployment/base/maas-controller|fbe914c4147d79217de034fa2d02ef819ea9681a|fbe914c4147d79217de034fa2d02ef819ea9681a"
+    [maascontroller]="somya-bhatnagar:models-as-a-service|deployment/base/maas-controller|7a6161e70a7af42d3f3e64996fb77f5319bb7e28|7a6161e70a7af42d3f3e64996fb77f5319bb7e28"
 )
 set -u
 
