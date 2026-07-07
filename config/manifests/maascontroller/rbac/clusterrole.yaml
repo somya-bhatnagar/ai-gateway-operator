@@ -112,9 +112,35 @@ rules:
   - patch
   - watch
 - apiGroups:
+  - components.platform.opendatahub.io
+  resources:
+  - modelsasservices
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - components.platform.opendatahub.io
+  resources:
+  - modelsasservices/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - config.openshift.io
   resources:
   - authentications
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - dscinitialization.opendatahub.io
+  resources:
+  - dscinitializations
   verbs:
   - get
   - list
@@ -200,6 +226,7 @@ rules:
   - kuadrant.io
   resources:
   - ratelimitpolicies
+  - telemetrypolicies
   verbs:
   - create
   - delete
@@ -347,6 +374,12 @@ rules:
   - rbac.authorization.k8s.io
   resources:
   - rolebindings
+  verbs:
+  - delete
+  - get
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
   - roles
   verbs:
   - create
